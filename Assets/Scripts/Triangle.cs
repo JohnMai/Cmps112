@@ -4,25 +4,31 @@ using Holoville.HOTween;
 using ProBuilder2.Common;
 
 public class Triangle : MonoBehaviour {
-    public float maxHealth = 100, chargeTimeSec = 4, miniTriExpandSpeed = 1, speedTriRotAround = 1;
+    public float maxHealth = 100, chargeTimeSec = 4, miniTriExpandSpeed = 1, speedTriRotAround = 1, shotWidth = 0.2f;
     public GameObject circle, miniTrianglePrefab;
 	public Transform point, triOnePos, triTwoPos, triThreePos;
-	public bool shitsOn = false;
+    public bool shitsOn = false;
 
     private GameObject triOne, triTwo, triThree;
 	private NavMeshAgent agent;
+    private LineRenderer line;
 	private float currentHealth;
     private bool canHailMary = true, canRotate = false;
-	
 	// Use this for initialization
 	void Start () {
 		agent = GetComponent<NavMeshAgent>();
+        line = GetComponent<LineRenderer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (shitsOn) 
-			StartCoroutine(ChargeUp());
+        Vector3 mainPosition = new Vector3(transform.position.x, triOnePos.position.y, transform.position.z);
+        Vector3 dirOne = triOnePos.position - mainPosition;
+        dirOne.Normalize();
+        Debug.DrawRay(mainPosition, dirOne);
+
+        if (shitsOn)
+            StartCoroutine(chargeUp());
         MoveToDestination(point.position);
         if (Input.GetKeyUp(KeyCode.UpArrow)) {
             spawnTriangles();
@@ -41,13 +47,33 @@ public class Triangle : MonoBehaviour {
 		agent.SetDestination(point.position);
 	}
 	
-	public IEnumerator ChargeUp() {
+	public IEnumerator chargeUp() {
 		Vector3 newRotation = gameObject.transform.eulerAngles;
 		newRotation.y += 360;
 		yield return (HOTween.To(gameObject.transform, chargeTimeSec, "eulerAngles", newRotation).WaitForCompletion());
         shitsOn = false;
+        fireBeam();
 	}
 
+    public void fireBeam() {
+        RaycastHit hitOne, hitTwo, hitThree;
+
+        Vector3 mainPosition = new Vector3(transform.position.x, triOnePos.position.y, transform.position.z);
+        Vector3 dirOne = triOnePos.position - mainPosition, dirTwo = triTwoPos.position - mainPosition, dirThree = triThreePos.position - mainPosition;
+        dirOne.Normalize();
+
+        Physics.Raycast(mainPosition, dirOne, out hitOne);
+        Physics.Raycast(transform.position, dirTwo, out hitTwo);
+        Physics.Raycast(transform.position, dirThree, out hitThree);
+
+        line.SetPosition(1, hitOne.point);
+        line.SetPosition(0, triOnePos.position);
+        line.SetWidth(shotWidth, shotWidth);
+
+        Debug.Log(hitOne.collider.gameObject);
+
+        //HOTween.To(this, dissapearRate, new TweenParms().Prop("lineTempWidth", 0).OnUpdate(lineDissapear).OnComplete(restockBeam));
+    }
     public void spawnTriangles() {
         //set them to spawn in center of tri 
         triOne = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(0, 0, 1), Quaternion.identity);
@@ -90,4 +116,11 @@ public class Triangle : MonoBehaviour {
 	public bool CanHailMary {
 		get { return canHailMary; }
 	}
+
+    void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(triOnePos.position, 0.1f);
+        Gizmos.DrawSphere(transform.position, 0.1f);
+        //Gizmos.DrawSphere(hitOne.point, 0.1f);
+    }
 }
