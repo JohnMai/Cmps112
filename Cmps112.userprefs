@@ -1,8 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Triangle.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TriangleBehaviorTree.cs">
     <Files>
-      <File FileName="Assets\Scripts\Triangle.cs" Line="34" Column="3" />
+      <File FileName="Assets/Scripts/RootSelector.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/BehaviorTree.cs" Line="5" Column="1" />
+      <File FileName="Assets/Scripts/BehaviorTask.cs" Line="5" Column="2" />
+      <File FileName="Assets/Scripts/TriangleBehaviorTree.cs" Line="37" Column="3" />
+      <File FileName="Assets/Scripts/BehaviorSelector.cs" Line="21" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
