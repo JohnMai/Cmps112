@@ -1,12 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TriangleBehaviorTree.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Sequence.js">
     <Files>
-      <File FileName="Assets/Scripts/RootSelector.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/BehaviorTree.cs" Line="5" Column="1" />
-      <File FileName="Assets/Scripts/BehaviorTask.cs" Line="5" Column="2" />
-      <File FileName="Assets/Scripts/TriangleBehaviorTree.cs" Line="37" Column="3" />
-      <File FileName="Assets/Scripts/BehaviorSelector.cs" Line="21" Column="34" />
+      <File FileName="Assets\Scripts\Task.js" Line="11" Column="6" />
+      <File FileName="Assets\Scripts\Selector.js" Line="7" Column="3" />
+      <File FileName="Assets\Scripts\Sequence.js" Line="7" Column="18" />
+      <File FileName="Assets\Scripts\RandomSelector.js" Line="13" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
