@@ -37,7 +37,8 @@ public class Triangle : MonoBehaviour {
         }
         //debugging
         if (Input.GetKeyUp(KeyCode.DownArrow)) {
-            FireBeam(shotWidth, shotSpeed);
+            FireBullets();
+            //FireBeam(shotWidth, shotSpeed);
         }
         //debugging
         if (Input.GetKeyUp(KeyCode.RightArrow)) {
@@ -61,10 +62,12 @@ public class Triangle : MonoBehaviour {
 
     //tells our object to move to a specific location
 	public void MoveToDestination(Vector3 position) {
+        StartCoroutine(RandomSpin());
 		agent.SetDestination(point.position);
 	}
 
     public void MoveToDestination(int zone) {
+        StartCoroutine(RandomSpin());
         int randomNumber = Random.Range(0, 4);
         if (zone == 1) {
             agent.SetDestination(point.position);
@@ -74,6 +77,14 @@ public class Triangle : MonoBehaviour {
             agent.SetDestination(level3Waypoints[randomNumber].position);
         }
     }
+    public IEnumerator RandomSpin() {
+        Vector3 newRotation = gameObject.transform.eulerAngles;
+        newRotation.y += Random.Range(0f, 360f);
+        speedTriRotAround = -1 * speedTriRotAround;
+        yield return StartCoroutine(HOTween.To(gameObject.transform, 1, new TweenParms().Prop("eulerAngles", newRotation).Ease(EaseType.Linear)).WaitForCompletion());
+        speedTriRotAround = -1 * speedTriRotAround;
+    }
+
     //makes our triangle spin to charge up
 	public IEnumerator ChargeUp() {
 		Vector3 newRotation = gameObject.transform.eulerAngles;
