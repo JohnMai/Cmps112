@@ -6,8 +6,8 @@ using System.Collections;
 public class BehaviorSequence : BehaviorTask {
 	
 	//holds list of behaviorTask to do
-	private  BehaviorTask[] behaviorList;
-	
+	private BehaviorTask[] behaviorList;
+    private int currentlyRunning = -1;
 	//constructor
 	//params "behaviors" an array of all behaviors this sequence will hold
 	public BehaviorSequence( params  BehaviorTask[] behaviors ){
@@ -20,9 +20,7 @@ public class BehaviorSequence : BehaviorTask {
 	//runs each selector children left to right till one fails
 	public override BehaviorReturnResult behave ()	{
 
-		bool anyBehaviorRunning = false;
-
-		for (int i = 0; i < behaviorList.Length; i ++) {
+		for (int i = (currentlyRunning == -1)? 0 : currentlyRunning; i < behaviorList.Length; i ++) {
 			try {
 				switch (behaviorList [i].behave ()) {
 					case BehaviorReturnResult.Failure:
@@ -31,10 +29,11 @@ public class BehaviorSequence : BehaviorTask {
 					case BehaviorReturnResult.Success:
 						continue;
 					case BehaviorReturnResult.Running:
+                        currentlyRunning = i;
 						result = BehaviorReturnResult.Running;
-						anyBehaviorRunning = true;
 						return result;
 					default:
+                        currentlyRunning = -1;
 						result = BehaviorReturnResult.Success;
 						return result;
 				}
@@ -44,11 +43,7 @@ public class BehaviorSequence : BehaviorTask {
 				return result;
 			}
 		}
-		if (!anyBehaviorRunning)
-			result = BehaviorReturnResult.Success;
-		else
-			result = BehaviorReturnResult.Running;
-		
-		return result;
+		currentlyRunning = -1;
+		return result = BehaviorReturnResult.Success;
 	}
 }

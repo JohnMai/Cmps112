@@ -4,7 +4,7 @@ using Holoville.HOTween;
 using ProBuilder2.Common;
 
 public class TriangleImproved : MonoBehaviour {
-    public float maxHealth = 100, chargeTimeSec = 4, miniTriExpandSpeed = 1, speedTriRotAround = 1, beamWidth = 0.2f, shotWidth = 0.1f, beamSpeed = 0.2f, shotSpeed  = 0.1f;
+    public float maxHealth = 100, chargeTimeSec = 4, miniTriExpandSpeed = 1, speedTriRotAround = 1, beamWidth = 0.2f, shotWidth = 0.1f, beamSpeed = 0.2f, shotSpeed = 0.1f, hailMaryCoolDown = 5;
     public GameObject circle, miniTrianglePrefab, bulletPrefab;
     public Transform point, triOnePos, triTwoPos, triThreePos, levelOneWaypoint;
     public Transform[] level2Waypoints = new Transform[2], level3Waypoints = new Transform[4];
@@ -12,14 +12,15 @@ public class TriangleImproved : MonoBehaviour {
     private GameObject triOne, triTwo, triThree;
 	private NavMeshAgent agent;
     private LineRenderer triLineOne, triLineTwo, triLineThree;
-    private float currentHealth;
+    private float currentHealth, currentHMCoolDown;
     [HideInInspector]
     public float shotTempWidth;
-    private bool canHailMary = true, canRotate = false, firingBeam = false;
+    private bool canHailMary = true, canRotate = false, firingBeam = false, canStartTimer = true;
     Tweener spin;
 	// Use this for initialization
 	void Start () {
         shotTempWidth = 0;
+        currentHMCoolDown = 0;
 		agent = GetComponent<NavMeshAgent>();
         triLineOne = triOnePos.GetComponent<LineRenderer>();
         triLineTwo = triTwoPos.GetComponent<LineRenderer>();
@@ -28,10 +29,18 @@ public class TriangleImproved : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (currentHMCoolDown < hailMaryCoolDown && canStartTimer) {
+            currentHMCoolDown += Time.deltaTime;
+            canHailMary = false;
+        } else {
+            canHailMary = true;
+        }
+
         //debugging
         if(Input.GetKeyUp(KeyCode.LeftArrow)){
-            //StartCoroutine(ChargeUp());
+            ChargeUp();
         }
+
         //debugging
         if (Input.GetKeyUp(KeyCode.UpArrow)) {
             SpawnTriangles();
@@ -96,6 +105,7 @@ public class TriangleImproved : MonoBehaviour {
     //makes our triangle spin to charge up
     public BehaviorReturnResult ChargeUp() {
         if (spin == null) {
+            canStartTimer = false;
             Vector3 newRotation = gameObject.transform.eulerAngles;
             newRotation.y += 360;
             speedTriRotAround = -1 * speedTriRotAround;
@@ -148,6 +158,7 @@ public class TriangleImproved : MonoBehaviour {
             if (hitOne.collider.gameObject.tag == "Cylinder" || hitTwo.collider.gameObject.tag == "Cylinder" || hitThree.collider.gameObject.tag == "Cylinder")
                 hitOne.collider.gameObject.SendMessage("ApplyDamage", -1);
             firingBeam = true;
+
             StartCoroutine(HelperBeam(triLineOne, triOnePos, hitOne, beamWidth, beamSpeed));
             StartCoroutine(HelperBeam(triLineTwo, triTwoPos, hitTwo, beamWidth, beamSpeed));
             StartCoroutine(HelperBeam(triLineThree, triThreePos, hitThree, beamWidth, beamSpeed));
@@ -207,9 +218,10 @@ public class TriangleImproved : MonoBehaviour {
             HOTween.To(triOne.transform, 1, new TweenParms().Prop("eulerAngles", oneRot).Loops(-1).Ease(EaseType.Linear));
             HOTween.To(triTwo.transform, 1, new TweenParms().Prop("eulerAngles", twoRot).Loops(-1).Ease(EaseType.Linear));
             HOTween.To(triThree.transform, 1, new TweenParms().Prop("eulerAngles", threeRot).Loops(-1).Ease(EaseType.Linear));
+            return BehaviorReturnResult.Success;
         }
 
-        return BehaviorReturnResult.Success;
+        return BehaviorReturnResult.Failure;
     }
 
     //makes the triangles rotate around our triangle
@@ -223,8 +235,8 @@ public class TriangleImproved : MonoBehaviour {
 		get { return currentHealth; }
 	}
 	
-	public bool CanHailMary {
-		get { return canHailMary; }
+	public bool CanHailMary() {
+		return canHailMary; 
 	}
 
     //sets up the linerenders for our fireBeam function
@@ -236,7 +248,12 @@ public class TriangleImproved : MonoBehaviour {
         yield return StartCoroutine(HOTween.To(this, speedOfShot, new TweenParms().Prop("shotTempWidth", widthOfShot).OnUpdate(BeamAppDissapear, beam)).WaitForCompletion());
         yield return StartCoroutine(HOTween.To(this, speedOfShot, new TweenParms().Prop("shotTempWidth", 0).OnUpdate(BeamAppDissapear, beam)).WaitForCompletion());
         firingBeam = false;
+
+        //dissipate triangles and reset hailMary stuff
         Destroy(triOne); Destroy(triTwo); Destroy(triThree);
+        canRotate = false;
+        canStartTimer = true;
+        currentHMCoolDown = 0;
     }
 
     //allows the beam to appear and dissapear with hotween

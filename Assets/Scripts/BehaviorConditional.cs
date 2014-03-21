@@ -11,6 +11,10 @@ public class BehaviorConditional : BehaviorTask {
 		conditionFunction = testFunction;
 	}
 
+    public void setBehaviorConditional(Func<Boolean> testFunction) {
+        conditionFunction = testFunction;
+    }
+
 	public override BehaviorReturnResult behave ()
 	{
 		try{

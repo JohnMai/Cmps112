@@ -29,14 +29,6 @@ public class TriangleBehaviorTree : MonoBehaviour {
         BehaviorAction stop = newTask("Stop Action", TaskType.Action).GetComponent<BehaviorAction>();
         stop.setAction(triangle.Stop);
 
-        //charge action
-        BehaviorAction charge = newTask("Charge Action", TaskType.Action).GetComponent<BehaviorAction>();
-        charge.setAction(triangle.ChargeUp);
-
-        //stop-charge sequnce
-        BehaviorSequence depthFourNodeOneHM = newTask("Stop Turn Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
-        depthFourNodeOneHM.setBehaviorSequence(stop, charge);
-
         //small tri's spawn action
         BehaviorAction triangleAppear = newTask("Triangle Appear Action", TaskType.Action).GetComponent<BehaviorAction>();
         triangleAppear.setAction(triangle.SpawnTriangles);
@@ -45,21 +37,44 @@ public class TriangleBehaviorTree : MonoBehaviour {
         BehaviorAction turnAround = newTask("Tris Rotating Action", TaskType.Action).GetComponent<BehaviorAction>();
         turnAround.setAction(triangle.sendTrisRotating);
 
-        //small tri's spawn-turn around sequence
-        BehaviorSequence depthFourNodeTwoHM = newTask("SpawnTri TrisRotat Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
-        depthFourNodeTwoHM.setBehaviorSequence(triangleAppear, turnAround);
+        //charge action
+        BehaviorAction charge = newTask("Charge Action", TaskType.Action).GetComponent<BehaviorAction>();
+        charge.setAction(triangle.ChargeUp);
 
-        //stop-charge--small tri's spawn-turn around parallel sequence
-        BehaviorParallelSequence depthThreeHM = newTask("Charge Spawn Parrellel Sequence", TaskType.BehaviorParallelSequence).GetComponent<BehaviorParallelSequence>();
-        depthThreeHM.setBehaviorParallelSequence(depthFourNodeOneHM, depthFourNodeTwoHM);
-            
         //fire beam action
         BehaviorAction beam = newTask("Beam Action", TaskType.Action).GetComponent<BehaviorAction>();
         beam.setAction(triangle.FireBeam);
 
-        //parallel sequnce-fire beam sequence
-        BehaviorSequence depthTwoHM = newTask("Parallel Beam Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
-        depthTwoHM.setBehaviorSequence(depthThreeHM, beam);
+        //stop-triAppear-Spin-charge sequence
+        BehaviorSequence stopAppearChargeSeq = newTask("Hail Mary Charge Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        stopAppearChargeSeq.setBehaviorSequence(stop, triangleAppear, turnAround, charge);
+
+        //stop-triAppear-Spin-charge--beam sequence
+        BehaviorSequence stopAppearChargeBeamSeq = newTask("Hail Mary Charge Beam Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        stopAppearChargeBeamSeq.setBehaviorSequence(stopAppearChargeSeq, beam);
+
+        //can Hm condiiton
+        BehaviorConditional canHailMary = newTask("Can Hail Mary Condition", TaskType.Condition).GetComponent<BehaviorConditional>();
+        canHailMary.setBehaviorConditional(triangle.CanHailMary);
+
+        //stop-triAppear-Spin-charge--beam sequence
+        BehaviorSequence mainHailMarySequence = newTask("Condition And Action Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        mainHailMarySequence.setBehaviorSequence(canHailMary, stopAppearChargeBeamSeq);
+        ////stop-charge sequnce
+        //BehaviorSequence depthFourNodeOneHM = newTask("Stop Turn Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthFourNodeOneHM.setBehaviorSequence(stop, charge);
+
+        ////small tri's spawn-turn around sequence
+        //BehaviorSequence depthFourNodeTwoHM = newTask("SpawnTri TrisRotat Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthFourNodeTwoHM.setBehaviorSequence(triangleAppear, turnAround);
+
+        ////stop-charge--small tri's spawn-turn around parallel sequence
+        //BehaviorParallelSequence depthThreeHM = newTask("Charge Spawn Parrellel Sequence", TaskType.BehaviorParallelSequence).GetComponent<BehaviorParallelSequence>();
+        //depthThreeHM.setBehaviorParallelSequence(depthFourNodeOneHM, depthFourNodeTwoHM);
+
+        ////parallel sequnce-fire beam sequence
+        //BehaviorSequence depthTwoHM = newTask("Parallel Beam Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthTwoHM.setBehaviorSequence(depthThreeHM, beam);
 
         //BehaviorConditional canHailMary = new BehaviorConditional (/* pass function that will be executed this unique behavior */);
         //BehaviorConditional healthBelow = new BehaviorConditional (/* pass function that will be executed this unique behavior */);
@@ -92,7 +107,7 @@ public class TriangleBehaviorTree : MonoBehaviour {
         ////Setup Root Node which holds all behaviors
         //root = new RootSelector (/* Need A Function still unsure what look in root and look at private index function  */ " " , HailMary, CombineAggDefComposites);
         root = newTask("Root Selector", TaskType.RootSelector).GetComponent<RootSelector>();
-        root.setRootSelector(switchbehavior, depthTwoHM);
+        root.setRootSelector(switchbehavior, mainHailMarySequence);
 
         triangleBehavior.setBehaviorTree(root);
 
@@ -104,9 +119,17 @@ public class TriangleBehaviorTree : MonoBehaviour {
 
 	//Runs TriangleBehavior
 	void Update () {
-		triangleBehavior.behave ();
+		//triangleBehavior.behave ();
+        //StartCoroutine(tick(0.1f));
 	}
 
+    void FixedUpdate() {
+        triangleBehavior.behave();
+    }
+    private IEnumerator tick(float timeToWait) {
+        triangleBehavior.behave();
+        yield return new WaitForSeconds(timeToWait);
+    }
     GameObject newTask(string name, TaskType task ) {
         GameObject tempTask;
 
