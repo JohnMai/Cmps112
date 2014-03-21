@@ -14,6 +14,11 @@ public class RootSelector : BehaviorTask {
 		behaviorList = behaviors;
 	}
 	
+    public void setRootSelector( Func<int> rootBranchChoosingFunction , params BehaviorTask[] behaviors ){
+        index = rootBranchChoosingFunction;
+        behaviorList = behaviors;
+    }
+
 	public override BehaviorReturnResult behave ()
 	{
 		try{

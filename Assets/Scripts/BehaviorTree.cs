@@ -23,6 +23,9 @@ public class BehaviorTree : MonoBehaviour {
 		set{ result = value; }
 	}
 
+    public void setBehaviorTree(RootSelector createdRoot){
+        root = createdRoot;
+    }
 	//constructor for behavior tree taking in a root as param
 	public BehaviorTree( RootSelector createdRoot ){
 		root = createdRoot;

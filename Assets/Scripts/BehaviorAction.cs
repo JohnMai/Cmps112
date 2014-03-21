@@ -17,6 +17,9 @@ public class BehaviorAction : BehaviorTask {
 		action = actionTaken;
 	}
 
+    public void setAction(Func<BehaviorReturnResult> actionTaken) {
+        action = actionTaken;
+    }
 	//should wait for action to invoke and wait till it returns a result that will return which Behavior result it finished;
 	public override BehaviorReturnResult behave ()
 	{

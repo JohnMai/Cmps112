@@ -17,7 +17,6 @@ public abstract class Task : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
 	//virtual function 

@@ -16,6 +16,8 @@ GameObject:
   - 195: {fileID: 19500000}
   - 114: {fileID: 11400000}
   - 120: {fileID: 12000006}
+  - 114: {fileID: 11400006}
+  - 114: {fileID: 11400008}
   m_Layer: 9
   m_Name: Triangle
   m_TagString: Triangle
@@ -165,7 +167,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb2faf4d487bfe44887a9d6346787b96, type: 3}
   m_Name: 
@@ -446,6 +448,63 @@ MonoBehaviour:
   size: {x: 1, y: 1, z: 1}
   userSetDimensions: 0
   _entityType: 4
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0351652bd374f485b8c4383070f71659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: {fileID: 100000, guid: 7d5ab0a7d5e7c404493583c55840c3af, type: 2}
+  rootSelector: {fileID: 100000, guid: 4b6c2817c7c22dc40ab2ebf3b606a6b5, type: 2}
+  behaviorTree: {fileID: 100000, guid: 1f7b481bad462844a9f85ca295792f42, type: 2}
+  behaviorSequence: {fileID: 100000, guid: c6c5b33c32328be428291ef727cde140, type: 2}
+  behaviorSelector: {fileID: 100000, guid: b281a533982a31943961452b03d57dd1, type: 2}
+  behaviorParallelSequence: {fileID: 100000, guid: 828a0fc665a78d941aca14f22eabc18d,
+    type: 2}
+  condition: {fileID: 100000, guid: af359da44b9b17f48965b5e654b4e2ad, type: 2}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9422cd044400db445939f6e4d5238527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  chargeTimeSec: 2
+  miniTriExpandSpeed: 1
+  speedTriRotAround: 100
+  beamWidth: .600000024
+  shotWidth: .200000003
+  beamSpeed: .200000003
+  shotSpeed: .100000001
+  circle: {fileID: 0}
+  miniTrianglePrefab: {fileID: 100000, guid: eb793ee434f2b8f4c8109af24df64944, type: 2}
+  bulletPrefab: {fileID: 100000, guid: 7c513affedd0664408573515c19f2b00, type: 2}
+  point: {fileID: 0}
+  triOnePos: {fileID: 400004}
+  triTwoPos: {fileID: 400006}
+  triThreePos: {fileID: 400002}
+  levelOneWaypoint: {fileID: 0}
+  level2Waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level3Waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  shotTempWidth: 0
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1

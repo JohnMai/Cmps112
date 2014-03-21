@@ -10,12 +10,20 @@ public class BehaviorParallelSequence : BehaviorTask {
 
 	//holds all the behaviors that are currently running
 	private List<BehaviorTask> runningBehaviors;
-	
+
+    void Start() {
+        runningBehaviors = new List<BehaviorTask>();
+    }
+
 	//constructor
 	//params "behaviors" an array of all behaviors this selector will hold
 	public BehaviorParallelSequence( params  BehaviorTask[] behaviors ){
 		behaviorList = behaviors;
 	}
+
+    public void setBehaviorParallelSequence( params BehaviorTask[] behaviors ){
+        behaviorList = behaviors;
+    }
 
 	private void runBehaviors( BehaviorTask behaviorToRun ){
 		runningBehaviors.Add (behaviorToRun);
@@ -28,7 +36,6 @@ public class BehaviorParallelSequence : BehaviorTask {
 			result = BehaviorReturnResult.Success;
 		} else
 			result = BehaviorReturnResult.Running;
-
 	}
 
 	//runs each behaviorTask children left to right till one fails
@@ -41,10 +48,10 @@ public class BehaviorParallelSequence : BehaviorTask {
 		for (int i = 0; i < behaviorList.Length; i++) {
 			runBehaviors( behaviorList[i] );
 		}
-
+        
 		//waits till one fails or all succeed 
 		while (result == BehaviorReturnResult.Running) {
-			//sleep
+            Debug.Log("Wild");
 		}
 
 		return result;

@@ -3,7 +3,7 @@ using System.Collections;
 using Holoville.HOTween;
 using ProBuilder2.Common;
 
-public class Triangle : MonoBehaviour {
+public class TriangleImproved : MonoBehaviour {
     public float maxHealth = 100, chargeTimeSec = 4, miniTriExpandSpeed = 1, speedTriRotAround = 1, beamWidth = 0.2f, shotWidth = 0.1f, beamSpeed = 0.2f, shotSpeed  = 0.1f;
     public GameObject circle, miniTrianglePrefab, bulletPrefab;
     public Transform point, triOnePos, triTwoPos, triThreePos, levelOneWaypoint;
@@ -15,7 +15,8 @@ public class Triangle : MonoBehaviour {
     private float currentHealth;
     [HideInInspector]
     public float shotTempWidth;
-    private bool canHailMary = true, canRotate = false;
+    private bool canHailMary = true, canRotate = false, firingBeam = false;
+    Tweener spin;
 	// Use this for initialization
 	void Start () {
         shotTempWidth = 0;
@@ -29,7 +30,7 @@ public class Triangle : MonoBehaviour {
 	void Update () {
         //debugging
         if(Input.GetKeyUp(KeyCode.LeftArrow)){
-            StartCoroutine(ChargeUp());
+            //StartCoroutine(ChargeUp());
         }
         //debugging
         if (Input.GetKeyUp(KeyCode.UpArrow)) {
@@ -47,7 +48,9 @@ public class Triangle : MonoBehaviour {
         }
 
         if (canRotate) {
-            sendTrisRotating();
+            triOne.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
+            triTwo.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
+            triThree.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
         }
 
 	}
@@ -69,7 +72,6 @@ public class Triangle : MonoBehaviour {
 
     public BehaviorReturnResult Stop() {
         agent.SetDestination(transform.position);
-        Debug.Log("Stop");
         return BehaviorReturnResult.Success;
     }
     public void MoveToDestination(int zone) {
@@ -92,13 +94,21 @@ public class Triangle : MonoBehaviour {
     }
 
     //makes our triangle spin to charge up
-	public IEnumerator ChargeUp() {
-		Vector3 newRotation = gameObject.transform.eulerAngles;
-		newRotation.y += 360;
-        speedTriRotAround = -1*speedTriRotAround;
-        yield return StartCoroutine(HOTween.To(gameObject.transform, chargeTimeSec, new TweenParms().Prop("eulerAngles", newRotation).Ease(EaseType.Linear)).WaitForCompletion());
-        speedTriRotAround = -1*speedTriRotAround;
-        FireBeam(beamWidth, beamSpeed);
+    public BehaviorReturnResult ChargeUp() {
+        if (spin == null) {
+            Vector3 newRotation = gameObject.transform.eulerAngles;
+            newRotation.y += 360;
+            speedTriRotAround = -1 * speedTriRotAround;
+            spin = HOTween.To(gameObject.transform, chargeTimeSec, new TweenParms().Prop("eulerAngles", newRotation).Ease(EaseType.Linear));
+        }
+
+        if (!spin.isComplete) {
+            return BehaviorReturnResult.Running;
+        } else {
+            spin = null;
+            speedTriRotAround = -1 * speedTriRotAround;
+            return BehaviorReturnResult.Success;
+        }
 
 	}
 
@@ -120,9 +130,32 @@ public class Triangle : MonoBehaviour {
         StartCoroutine(HelperBeam(triLineTwo, triTwoPos, hitTwo, widthOfShot, speedOfShot));
         StartCoroutine(HelperBeam(triLineThree, triThreePos, hitThree, widthOfShot, speedOfShot));
 
-
     }
 
+    public BehaviorReturnResult FireBeam() {
+
+        if (!firingBeam) {
+            RaycastHit hitOne, hitTwo, hitThree;
+
+            Vector3 mainPosition = new Vector3(transform.position.x, triOnePos.position.y, transform.position.z);
+            Vector3 dirOne = triOnePos.position - mainPosition, dirTwo = triTwoPos.position - mainPosition, dirThree = triThreePos.position - mainPosition;
+            dirOne.Normalize();
+
+            Physics.Raycast(mainPosition, dirOne, out hitOne);
+            Physics.Raycast(mainPosition, dirTwo, out hitTwo);
+            Physics.Raycast(mainPosition, dirThree, out hitThree);
+
+            if (hitOne.collider.gameObject.tag == "Cylinder" || hitTwo.collider.gameObject.tag == "Cylinder" || hitThree.collider.gameObject.tag == "Cylinder")
+                hitOne.collider.gameObject.SendMessage("ApplyDamage", -1);
+            firingBeam = true;
+            StartCoroutine(HelperBeam(triLineOne, triOnePos, hitOne, beamWidth, beamSpeed));
+            StartCoroutine(HelperBeam(triLineTwo, triTwoPos, hitTwo, beamWidth, beamSpeed));
+            StartCoroutine(HelperBeam(triLineThree, triThreePos, hitThree, beamWidth, beamSpeed));
+       
+            return BehaviorReturnResult.Success;
+        }
+        return BehaviorReturnResult.Running;
+    }
     //fires actual bullets in specified direction
     public void FireBullets() {
         Vector3 mainPosition = new Vector3(transform.position.x, triOnePos.position.y, transform.position.z);
@@ -145,42 +178,44 @@ public class Triangle : MonoBehaviour {
     }
 
     //sends our minitriangles eminating from the center of our triangle
-    public void SpawnTriangles() {
-        canRotate = true;
-        //set them to spawn in center of tri 
-        triOne = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(0, 0, 1), Quaternion.identity);
-        triTwo = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(1, 0, 0), Quaternion.identity);
-        triThree = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(1, 0, 0), Quaternion.identity);
+    public BehaviorReturnResult SpawnTriangles() {
 
-        triOne.transform.parent = transform;
-        triTwo.transform.parent = transform;
-        triThree.transform.parent = transform;
+        if(triOne == null && triTwo == null && triThree == null){
+            //set them to spawn in center of tri 
+            triOne = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(0, 0, 1), Quaternion.identity);
+            triTwo = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(1, 0, 0), Quaternion.identity);
+            triThree = ProBuilder.Instantiate(miniTrianglePrefab, new Vector3(1, 0, 0), Quaternion.identity);
 
-        //here to fix bug that wont set position on instantiate
-        triOne.transform.localPosition = Vector3.zero;
-        triTwo.transform.localPosition = Vector3.zero;
-        triThree.transform.localPosition = Vector3.zero;
+            triOne.transform.parent = transform;
+            triTwo.transform.parent = transform;
+            triThree.transform.parent = transform;
 
-        //tween outwards
-        HOTween.To(triOne.transform, miniTriExpandSpeed, "localPosition", triOnePos.localPosition);
-        HOTween.To(triTwo.transform, miniTriExpandSpeed, "localPosition", triTwoPos.localPosition);
-        HOTween.To(triThree.transform, miniTriExpandSpeed, "localPosition", triThreePos.localPosition);
+            //here to fix bug that wont set position on instantiate
+            triOne.transform.localPosition = Vector3.zero;
+            triTwo.transform.localPosition = Vector3.zero;
+            triThree.transform.localPosition = Vector3.zero;
 
-        //set there initial full spin
-        Vector3 oneRot = triOne.transform.eulerAngles, twoRot = triTwo.transform.eulerAngles, threeRot = triThree.transform.eulerAngles;
-        oneRot.y += 360; twoRot.y += 360; threeRot.y += 360;
-        //they full spin infinitely here
-        HOTween.To(triOne.transform, 1, new TweenParms().Prop("eulerAngles", oneRot).Loops(-1).Ease(EaseType.Linear));
-        HOTween.To(triTwo.transform, 1, new TweenParms().Prop("eulerAngles", twoRot).Loops(-1).Ease(EaseType.Linear));
-        HOTween.To(triThree.transform, 1, new TweenParms().Prop("eulerAngles", threeRot).Loops(-1).Ease(EaseType.Linear));
+            //tween outwards
+            HOTween.To(triOne.transform, miniTriExpandSpeed, "localPosition", triOnePos.localPosition);
+            HOTween.To(triTwo.transform, miniTriExpandSpeed, "localPosition", triTwoPos.localPosition);
+            HOTween.To(triThree.transform, miniTriExpandSpeed, "localPosition", triThreePos.localPosition);
 
+            //set there initial full spin
+            Vector3 oneRot = triOne.transform.eulerAngles, twoRot = triTwo.transform.eulerAngles, threeRot = triThree.transform.eulerAngles;
+            oneRot.y += 360; twoRot.y += 360; threeRot.y += 360;
+            //they full spin infinitely here
+            HOTween.To(triOne.transform, 1, new TweenParms().Prop("eulerAngles", oneRot).Loops(-1).Ease(EaseType.Linear));
+            HOTween.To(triTwo.transform, 1, new TweenParms().Prop("eulerAngles", twoRot).Loops(-1).Ease(EaseType.Linear));
+            HOTween.To(triThree.transform, 1, new TweenParms().Prop("eulerAngles", threeRot).Loops(-1).Ease(EaseType.Linear));
+        }
+
+        return BehaviorReturnResult.Success;
     }
 
     //makes the triangles rotate around our triangle
-    public void sendTrisRotating(){
-        triOne.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
-        triTwo.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
-        triThree.transform.RotateAround(transform.position, Vector3.up, speedTriRotAround * Time.deltaTime);
+    public BehaviorReturnResult sendTrisRotating() {
+        canRotate = true;
+        return BehaviorReturnResult.Success;
     }
 
     //accesor functions 
@@ -199,8 +234,9 @@ public class Triangle : MonoBehaviour {
         beam.SetPosition(1, hit.point);
         beam.SetPosition(0, beamStart.position);
         yield return StartCoroutine(HOTween.To(this, speedOfShot, new TweenParms().Prop("shotTempWidth", widthOfShot).OnUpdate(BeamAppDissapear, beam)).WaitForCompletion());
-        HOTween.To(this, speedOfShot, new TweenParms().Prop("shotTempWidth", 0).OnUpdate(BeamAppDissapear, beam));
-
+        yield return StartCoroutine(HOTween.To(this, speedOfShot, new TweenParms().Prop("shotTempWidth", 0).OnUpdate(BeamAppDissapear, beam)).WaitForCompletion());
+        firingBeam = false;
+        Destroy(triOne); Destroy(triTwo); Destroy(triThree);
     }
 
     //allows the beam to appear and dissapear with hotween

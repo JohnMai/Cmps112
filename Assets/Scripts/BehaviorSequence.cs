@@ -13,7 +13,10 @@ public class BehaviorSequence : BehaviorTask {
 	public BehaviorSequence( params  BehaviorTask[] behaviors ){
 		behaviorList = behaviors;
 	}
-	
+
+    public void setBehaviorSequence(params BehaviorTask[] behaviors) {
+        behaviorList = behaviors;
+    }
 	//runs each selector children left to right till one fails
 	public override BehaviorReturnResult behave ()	{
 

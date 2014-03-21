@@ -1,15 +1,19 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Sequence.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BehaviorParallelSequence.cs">
     <Files>
-      <File FileName="Assets\Scripts\Task.js" Line="11" Column="6" />
-      <File FileName="Assets\Scripts\Selector.js" Line="7" Column="3" />
-      <File FileName="Assets\Scripts\Sequence.js" Line="7" Column="18" />
-      <File FileName="Assets\Scripts\RandomSelector.js" Line="13" Column="4" />
+      <File FileName="Assets\Scripts\BehaviorParallelSequence.cs" Line="50" Column="8" />
+      <File FileName="Assets\Scripts\BehaviorAction.cs" Line="34" Column="1" />
+      <File FileName="Assets\Scripts\BehaviorSequence.cs" Line="32" Column="1" />
+      <File FileName="Assets\Scripts\TriangleImproved.cs" Line="106" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\TriangleImproved.cs" line="110" />
+      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\BehaviorParallelSequence.cs" line="36" />
+      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\BehaviorParallelSequence.cs" line="38" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
