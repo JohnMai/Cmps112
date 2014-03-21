@@ -479,13 +479,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  chargeTimeSec: 2
+  chargeTimeSec: 5
   miniTriExpandSpeed: 1
   speedTriRotAround: 100
   beamWidth: .600000024
   shotWidth: .200000003
   beamSpeed: .200000003
   shotSpeed: .100000001
+  hailMaryCoolDown: 5
   circle: {fileID: 0}
   miniTrianglePrefab: {fileID: 100000, guid: eb793ee434f2b8f4c8109af24df64944, type: 2}
   bulletPrefab: {fileID: 100000, guid: 7c513affedd0664408573515c19f2b00, type: 2}
