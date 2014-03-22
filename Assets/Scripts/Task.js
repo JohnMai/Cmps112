@@ -9,8 +9,7 @@ public interface ITask{
 
 public class Task extends MonoBehaviour implements ITask{
 	var children : List.<Task> = new List.<Task>();
-	//var children = new Task[12];
-	//var children = new ArrayList(); 
+	
 	public function Run(): boolean{
 	}
 }
