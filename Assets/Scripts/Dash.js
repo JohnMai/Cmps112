@@ -10,7 +10,7 @@ public class Dash extends Task{
 	var outParms : TweenParms = new TweenParms();
 	
 	public function Run():boolean{
-		circleScript = circle.GetComponent(Circle);
+		circleScript = circle.GetComponent.<Circle>();
 		parms.Prop("speed", circleScript.dashSpeed);
 		parms.Ease(EaseType.EaseInCubic);
 	
