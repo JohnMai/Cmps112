@@ -222,7 +222,7 @@ function stopDash(){
 		//Continue to point 3
 		agent.speed = defSpeed * 0.5;
 	}
-	dashCooldown(dashCD);
+	dashCooldown();
 	wait();
 }
 
@@ -234,9 +234,9 @@ function wait(){
 	Debug.Log("evading");
 }
 
-function dashCooldown(time : float){
+public function dashCooldown(){
 	canDash = false;
-	yield WaitForSeconds(time);
+	yield WaitForSeconds(dashCD);
 	canDash = true;
 }
 
@@ -296,4 +296,9 @@ public function setHailMary(bool : boolean){
 public function setChanneling(bool : boolean){
 	channeling = bool;
 		channelCooldown(healCD);
+}
+
+public function setIsDashing(bool : boolean){
+	isDashing = bool;
+	dashCooldown();
 }
