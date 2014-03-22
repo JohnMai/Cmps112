@@ -1,11 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BehaviorParallelSequence.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dash.js">
     <Files>
-      <File FileName="Assets\Scripts\BehaviorParallelSequence.cs" Line="50" Column="8" />
-      <File FileName="Assets\Scripts\BehaviorAction.cs" Line="34" Column="1" />
-      <File FileName="Assets\Scripts\BehaviorSequence.cs" Line="32" Column="1" />
-      <File FileName="Assets\Scripts\TriangleImproved.cs" Line="106" Column="1" />
+      <File FileName="Assets\Scripts\Dash.js" Line="42" Column="52" />
+      <File FileName="Assets\Scripts\Sequence.js" Line="3" Column="36" />
+      <File FileName="Assets\Scripts\Task.js" Line="12" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
