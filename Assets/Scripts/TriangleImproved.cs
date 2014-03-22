@@ -17,15 +17,11 @@ public class TriangleImproved : MonoBehaviour {
     [HideInInspector]
     public float shotTempWidth;
     private bool canHailMary = true, canRotate = false, firingBeam = false, canStartTimer = true;
-	private float currentFireBulletCD , fireBulletCD = 2;
-	private bool canFireBullet;
-
-	Tweener spin;
+    Tweener spin;
 	// Use this for initialization
 	void Start () {
         shotTempWidth = 0;
         currentHMCoolDown = 0;
-		currentFireBulletCD = 0;
 		agent = GetComponent<NavMeshAgent>();
         triLineOne = triOnePos.GetComponent<LineRenderer>();
         triLineTwo = triTwoPos.GetComponent<LineRenderer>();
@@ -40,14 +36,6 @@ public class TriangleImproved : MonoBehaviour {
         } else {
             canHailMary = true;
         }
-
-		if (currentFireBulletCD < fireBulletCD ) {
-			currentFireBulletCD += Time.deltaTime;
-			canFireBullet = false;
-		} else {
-			canFireBullet = true;
-		}
-
 
         //debugging
         if(Input.GetKeyUp(KeyCode.LeftArrow)){
@@ -126,6 +114,13 @@ public class TriangleImproved : MonoBehaviour {
 
 	}
 
+	public BehaviorReturnResult CheckAtDestination(){
+		if (agent.hasPath == true) {
+			return BehaviorReturnResult.Running;
+		} else {
+			return BehaviorReturnResult.Success;
+		}
+	}
 
     public IEnumerator RandomSpin() {
         Vector3 newRotation = gameObject.transform.eulerAngles;
@@ -206,36 +201,24 @@ public class TriangleImproved : MonoBehaviour {
         return BehaviorReturnResult.Running;
     }
     //fires actual bullets in specified direction
-    public BehaviorReturnResult FireBullets() {
-	
-		if (canFireBullet) {
-			Vector3 mainPosition = new Vector3 (transform.position.x, triOnePos.position.y, transform.position.z);
-			Vector3 dirOne = triOnePos.position - mainPosition, dirTwo = triTwoPos.position - mainPosition, dirThree = triThreePos.position - mainPosition;
-			dirOne.Normalize ();
-			dirTwo.Normalize ();
-			dirThree.Normalize ();
+    public void FireBullets() {
+        Vector3 mainPosition = new Vector3(transform.position.x, triOnePos.position.y, transform.position.z);
+        Vector3 dirOne = triOnePos.position - mainPosition, dirTwo = triTwoPos.position - mainPosition, dirThree = triThreePos.position - mainPosition;
+        dirOne.Normalize(); dirTwo.Normalize(); dirThree.Normalize();
 
-			//set them to spawn in center of tri 
-			triOne = ProBuilder.Instantiate (bulletPrefab, new Vector3 (0, 0, 1), Quaternion.identity);
-			triTwo = ProBuilder.Instantiate (bulletPrefab, new Vector3 (1, 0, 0), Quaternion.identity);
-			triThree = ProBuilder.Instantiate (bulletPrefab, new Vector3 (1, 0, 0), Quaternion.identity);
-	
-			//here to fix bug that wont set position on instantiate
-			triOne.transform.position = triOnePos.position;
-			triTwo.transform.position = triTwoPos.position;
-			triThree.transform.position = triThreePos.position;
+        //set them to spawn in center of tri 
+        triOne = ProBuilder.Instantiate(bulletPrefab, new Vector3(0, 0, 1), Quaternion.identity);
+        triTwo = ProBuilder.Instantiate(bulletPrefab, new Vector3(1, 0, 0), Quaternion.identity);
+        triThree = ProBuilder.Instantiate(bulletPrefab, new Vector3(1, 0, 0), Quaternion.identity);
 
-			triOne.rigidbody.AddRelativeForce (dirOne * 1000);
-			triTwo.rigidbody.AddRelativeForce (dirTwo * 1000);
-			triThree.rigidbody.AddRelativeForce (dirThree * 1000);
+        //here to fix bug that wont set position on instantiate
+        triOne.transform.position = triOnePos.position;
+        triTwo.transform.position = triTwoPos.position;
+        triThree.transform.position = triThreePos.position;
 
-			currentFireBulletCD = 0;
-
-
-			return BehaviorReturnResult.Success;
-		}
-
-		return BehaviorReturnResult.Running;
+        triOne.rigidbody.AddRelativeForce(dirOne*1000);
+        triTwo.rigidbody.AddRelativeForce(dirTwo*1000);
+        triThree.rigidbody.AddRelativeForce(dirThree*1000);
     }
 
     //sends our minitriangles eminating from the center of our triangle

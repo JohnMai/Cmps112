@@ -56,30 +56,46 @@ public class TriangleBehaviorTree : MonoBehaviour {
         //can Hm condiiton
         BehaviorConditional canHailMary = newTask("Can Hail Mary Condition", TaskType.Condition).GetComponent<BehaviorConditional>();
         canHailMary.setBehaviorConditional(triangle.CanHailMary);
-		//healthlessthan condition
+
 		BehaviorConditional healthLessThanPercentage = newTask ("Health Less Than Percentage", TaskType.Condition).GetComponent<BehaviorConditional> ();
 		healthLessThanPercentage.setBehaviorConditional (triangle.HealthLessThanPercentage);
-		//moveToPointOne
+
 		BehaviorAction moveToPointOne = newTask ("Move To Point one", TaskType.Action).GetComponent<BehaviorAction> ();
 		moveToPointOne.setAction (triangle.MoveToDestinationOne);
 
-        //canHM-healthlessthen-moveto1 -- stop-triAppear-Spin-charge--beam sequence
+        //stop-triAppear-Spin-charge--beam sequence
         BehaviorSequence mainHailMarySequence = newTask("Condition And Action Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
         mainHailMarySequence.setBehaviorSequence(canHailMary, healthLessThanPercentage ,  moveToPointOne ,stopAppearChargeBeamSeq);
+        ////stop-charge sequnce
+        //BehaviorSequence depthFourNodeOneHM = newTask("Stop Turn Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthFourNodeOneHM.setBehaviorSequence(stop, charge);
 
-        ///////////////////////////////////////Aggressive Behavior////////////////////////////////////
-		BehaviorAction moveToCircle = newTask ("Move To Circle", TaskType.Action).GetComponent<BehaviorAction> ();
+        ////small tri's spawn-turn around sequence
+        //BehaviorSequence depthFourNodeTwoHM = newTask("SpawnTri TrisRotat Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthFourNodeTwoHM.setBehaviorSequence(triangleAppear, turnAround);
 
-		BehaviorAction fireBullets = newTask ("Fire Bullets", TaskType.Action).GetComponent<BehaviorAction> ();
-		fireBullets.setAction (triangle.FireBullets);
+        ////stop-charge--small tri's spawn-turn around parallel sequence
+        //BehaviorParallelSequence depthThreeHM = newTask("Charge Spawn Parrellel Sequence", TaskType.BehaviorParallelSequence).GetComponent<BehaviorParallelSequence>();
+        //depthThreeHM.setBehaviorParallelSequence(depthFourNodeOneHM, depthFourNodeTwoHM);
+
+        ////parallel sequnce-fire beam sequence
+        //BehaviorSequence depthTwoHM = newTask("Parallel Beam Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
+        //depthTwoHM.setBehaviorSequence(depthThreeHM, beam);
+
+        //BehaviorConditional canHailMary = new BehaviorConditional (/* pass function that will be executed this unique behavior */);
+        //BehaviorConditional healthBelow = new BehaviorConditional (/* pass function that will be executed this unique behavior */);
+        //BehaviorAction moveToPoint = new BehaviorAction (/* pass function that will be executed this unique behavior */);
+
+        //BehaviorSequence HailMary = new BehaviorSequence (canHailMary, healthBelow, moveToPoint, depthTwoHM );
+
+        ////Aggressive Behavior
+        //BehaviorAction moveToCircleUntilInner = new BehaviorAction(/* pass function that will be executed this unique behavior */);
+        ////Reuse fires behavior above
         //BehaviorAction moreThanXHealthThanCircle = new BehaviorAction (/* pass function that will be executed this unique behavior */);
-        
-		BehaviorSequence moveToCircleFireSeq = newTask( "Move To Circle Fire Sequence" , TaskType.BehaviorSequnce ).GetComponent<BehaviorSequence>();
-		moveToCircleFireSeq.setBehaviorSequence (moveToCircle, fireBullets);
+        //BehaviorParallelSequence depthThreeAGG = new BehaviorParallelSequence( moveToCircleUntilInner , fires );
+	
         //BehaviorSequence Aggressive = new BehaviorSequence ( moreThanXHealthThanCircle , depthThreeAGG);
-		BehaviorSequence mainAggressive = newTask ("AggressiveMainSequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence> ();
-		//mainAggressive.setBehaviorSequence();
-
+		
         ////Defensive Behavior
         //BehaviorConditional notInTransit = new BehaviorConditional (/* pass function that will be executed this unique behavior */);
         //BehaviorAction moveToRandomPointThree = new BehaviorAction (/* pass function that will be executed this unique behavior */);
