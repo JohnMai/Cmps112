@@ -57,9 +57,15 @@ public class TriangleBehaviorTree : MonoBehaviour {
         BehaviorConditional canHailMary = newTask("Can Hail Mary Condition", TaskType.Condition).GetComponent<BehaviorConditional>();
         canHailMary.setBehaviorConditional(triangle.CanHailMary);
 
+		BehaviorConditional healthLessThanPercentage = newTask ("Health Less Than Percentage", TaskType.Condition).GetComponent<BehaviorConditional> ();
+		healthLessThanPercentage.setBehaviorConditional (triangle.HealthLessThanPercentage);
+
+		BehaviorAction moveToPointOne = newTask ("Move To Point one", TaskType.Action).GetComponent<BehaviorAction> ();
+		moveToPointOne.setAction (triangle.MoveToDestinationOne);
+
         //stop-triAppear-Spin-charge--beam sequence
         BehaviorSequence mainHailMarySequence = newTask("Condition And Action Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
-        mainHailMarySequence.setBehaviorSequence(canHailMary, stopAppearChargeBeamSeq);
+        mainHailMarySequence.setBehaviorSequence(canHailMary, healthLessThanPercentage ,  moveToPointOne ,stopAppearChargeBeamSeq);
         ////stop-charge sequnce
         //BehaviorSequence depthFourNodeOneHM = newTask("Stop Turn Sequence", TaskType.BehaviorSequnce).GetComponent<BehaviorSequence>();
         //depthFourNodeOneHM.setBehaviorSequence(stop, charge);
@@ -105,9 +111,8 @@ public class TriangleBehaviorTree : MonoBehaviour {
         //BehaviorSelector CombineAggDefComposites = new BehaviorSelector (Aggressive, Defensive);
 
         ////Setup Root Node which holds all behaviors
-        //root = new RootSelector (/* Need A Function still unsure what look in root and look at private index function  */ " " , HailMary, CombineAggDefComposites);
         root = newTask("Root Selector", TaskType.RootSelector).GetComponent<RootSelector>();
-        root.setRootSelector(switchbehavior, mainHailMarySequence);
+        root.setRootSelector(switchbehavior, mainHailMarySequence , );
 
         triangleBehavior.setBehaviorTree(root);
 
