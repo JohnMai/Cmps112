@@ -112,7 +112,7 @@ public class TriangleBehaviorTree : MonoBehaviour {
 
         ////Setup Root Node which holds all behaviors
         root = newTask("Root Selector", TaskType.RootSelector).GetComponent<RootSelector>();
-        root.setRootSelector(switchbehavior, mainHailMarySequence , );
+        root.setRootSelector(switchbehavior, mainHailMarySequence  );
 
         triangleBehavior.setBehaviorTree(root);
 
