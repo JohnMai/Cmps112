@@ -2,7 +2,7 @@
 #pragma strict
 import Holoville.HOTween;
 
-var maxHealth : int = 100;
+var maxHealth : float = 100;
 var defSpeed : float = 3.5;
 var defAcc : float = 8;
 
@@ -40,7 +40,7 @@ private var canChannel : boolean;
 private var canHailMary : boolean;
 private var canDash : boolean;
 
-private var myHeading : GameObject;
+var myHeading : GameObject;
 
 //Set up in inspector for now.
 var rankOneWaypoints : GameObject[];
@@ -67,7 +67,7 @@ function Start () {
 	canHailMary = true;
 	
 	//startHailMary();
-	startAttack();
+	//startAttack();
 	//startEvade();
 }
 
@@ -80,7 +80,7 @@ function moveToDestination(destination : Vector3) {
 	agent.SetDestination(point.position);
 }
 
-function getCurrentHealth () : float {
+public function getCurrentHealth () : float {
 	return this.currentHealth;
 }
 
@@ -98,7 +98,7 @@ function startAttack(){
 	}
 }
 
-function explode(){
+/*function explode(){
 	point = this.transform;
 	Destroy(myHeading);
 	var explosionPosition : Vector3 = transform.position;
@@ -106,7 +106,7 @@ function explode(){
 	currentExplosion = Instantiate(explosion, explosionPosition, Quaternion.identity);
 	isAttacking = false;
 	attackCooldown(attackCD);
-}
+}*/
 
 function attackCooldown(time : float){
 	canAttack = false;
@@ -262,7 +262,7 @@ function grabLastDirVector() : Vector3{
 	return dirVector;
 }
 
-function generateRandomRankThree () : int{
+public function generateRandomRankThree () : int{
 	return (Random.Range(0, rankThreeWaypoints.Length - 1));
 }
 
@@ -273,4 +273,16 @@ function OnTriggerEnter(other : Collider){
 	else if(other.gameObject.name == "Triangle" && hailMary){
 		teleport();
 	}
+}
+
+function DestroyHeading(){
+	Destroy(myHeading);
+}
+
+public function setIsAttacking(bool : boolean){
+	isAttacking = bool;
+}
+
+public function setHailMary(bool : boolean){
+	hailMary = bool;
 }
