@@ -1,18 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Dash.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Task.js">
     <Files>
-      <File FileName="Assets\Scripts\Dash.js" Line="42" Column="52" />
-      <File FileName="Assets\Scripts\Sequence.js" Line="3" Column="36" />
-      <File FileName="Assets\Scripts\Task.js" Line="12" Column="2" />
+      <File FileName="Assets\Scripts\Task.js" Line="11" Column="2" />
+      <File FileName="Assets\Scripts\CircleBehaviorTree.js" Line="3" Column="20" />
+      <File FileName="Assets\Scripts\Sequence.js" Line="6" Column="25" />
+      <File FileName="Assets\Scripts\Selector.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\TriangleImproved.cs" line="110" />
-      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\BehaviorParallelSequence.cs" line="36" />
-      <Breakpoint file="C:\Users\Thomas\Documents\GitHub\Cmps112\Assets\Scripts\BehaviorParallelSequence.cs" line="38" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
