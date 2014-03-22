@@ -50,6 +50,6 @@ function Start () {
 	circleTree.children.Add(aggressive);
 	circleTree.children.Add(hiMary);
 	
-	
+	circleTree.Run();
 }
 
