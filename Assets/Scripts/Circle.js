@@ -27,7 +27,7 @@ var triAgent : NavMeshAgent;
 //Test point.
 var point : Transform;
 
-private var agent : NavMeshAgent;
+var agent : NavMeshAgent;
 private var currentHealth : int;
 
 private var isDashing : boolean;
@@ -46,6 +46,9 @@ var myHeading : GameObject;
 var rankOneWaypoints : GameObject[];
 var rankTwoWaypoints : GameObject[];;
 var rankThreeWaypoints : GameObject[];;
+
+//BT references
+var channelHeal : GameObject;
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
@@ -119,7 +122,7 @@ function attackCooldown(time : float){
 function startChannel(){
 	if(canChannel){
 		channeling = true;
-		channelHeal();
+		//channelHeal();
 	}
 }
 
@@ -131,9 +134,9 @@ function startEvade(){
 	}
 }
 
-function channelHeal(){
+/*function channelHeal(){
 	if(canChannel && currentHealth < maxHealth){
-		healDamage(healMagnitude);
+		healDamage();
 		
 		Invoke("channelHeal", healFrequency);
 	}
@@ -141,7 +144,7 @@ function channelHeal(){
 		channeling = false;
 		channelCooldown(healCD);
 	}
-}
+}*/
 
 function channelCooldown(time : float){
 	canChannel = false;
@@ -237,8 +240,8 @@ function dashCooldown(time : float){
 	canDash = true;
 }
 
-function healDamage(health : int){
-	currentHealth += health;
+public function healDamage(){
+	currentHealth += healMagnitude;
 }
 
 function applyDamage(){
@@ -273,6 +276,9 @@ function OnTriggerEnter(other : Collider){
 	else if(other.gameObject.name == "Triangle" && hailMary){
 		teleport();
 	}
+	else if(other.gameObject.name == "Triangle" && channeling){
+		channelHeal.SendMessage("gotHit");
+	}
 }
 
 function DestroyHeading(){
@@ -285,4 +291,9 @@ public function setIsAttacking(bool : boolean){
 
 public function setHailMary(bool : boolean){
 	hailMary = bool;
+}
+
+public function setChanneling(bool : boolean){
+	channeling = bool;
+		channelCooldown(healCD);
 }
