@@ -11,34 +11,42 @@ var explode : GameObject;
 var pickRanPoint  : GameObject;
 var leaveBomb : GameObject;
 var teleport  : GameObject;
+
+var stopChannel : Sequence;
+var dashMove : Sequence;
+var defensive : RandomSelector;
+var DWhenLow : Sequence;
+var aggressive : Sequence;
+var hiMary : Sequence;
+var circleTree : Selector;
 function Start () {
 	//sequence for stop then channel heal
-	var stopChannel = new Sequence();
+	stopChannel = new Sequence();
 	//var stop : GameObject;
 	//var channelHeal : GameObject;
 	stopChannel.children.Add(stop.GetComponent(Stop));
 	stopChannel.children.Add(stopChannel);
 
 	//sequence for dash then move to the cloest point 3
-	var dashMove = new Sequence();
+	dashMove = new Sequence();
 	//var dash  : GameObject;
 	//var move  : GameObject;
 	dashMove.children.Add(dash.GetComponent(Dash));
 	dashMove.children.Add(move.GetComponent(MoveToClosestPointThree));
 	
 	//defensive tree 
-	var defensive = new RandomSelector();
+	defensive = new RandomSelector();
 	defensive.children.Add(stopChannel);
 	defensive.children.Add(dashMove);
 	
 	//defense when low hp tree 
-	var DWhenLow = new Sequence();
+	DWhenLow = new Sequence();
 	//var circleHP  : GameObject;
 	DWhenLow.children.Add(circleHP.GetComponent(CircleHPCondition));
 	DWhenLow.children.Add(defensive);
 	
 	//aggressive tree
-	var aggressive = new Sequence();
+	aggressive = new Sequence();
 	//var withinDis  : GameObject;
 	//var dash2  : GameObject;
 	//var explode : GameObject;
@@ -47,7 +55,7 @@ function Start () {
 	aggressive.children.Add(explode.GetComponent(Explode));
 	
 	//hail mary tree
-	var hiMary = new Sequence();
+	hiMary = new Sequence();
 	//var pickRanPoint  : GameObject;
 	//var leaveBomb : GameObject;
 	//var teleport  : GameObject;
@@ -56,11 +64,17 @@ function Start () {
 	hiMary.children.Add(teleport.GetComponent(Teleport));
 	
 	//the entire circle tree
-	var circleTree = new Selector();
+	circleTree = new Selector();
 	circleTree.children.Add(DWhenLow);
 	circleTree.children.Add(aggressive);
 	circleTree.children.Add(hiMary);
 	
+	//circleTree.Run();
+	runTree();
+}
+
+function runTree(){
 	circleTree.Run();
+	Invoke("runTree", 1.5);
 }
 
