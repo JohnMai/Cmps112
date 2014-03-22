@@ -1,8 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CircleBehaviorTree.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Circle.js">
     <Files>
-      <File FileName="Assets\Scripts\CircleBehaviorTree.js" Line="43" Column="16" />
+      <File FileName="Assets\Scripts\Circle.js" Line="78" Column="1" />
+      <File FileName="Assets\Scripts\CircleBehaviorTree.js" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Sequence.js" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Selector.js" Line="1" Column="1" />
     </Files>

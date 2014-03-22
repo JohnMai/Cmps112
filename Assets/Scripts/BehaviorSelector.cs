@@ -14,6 +14,10 @@ public class BehaviorSelector : BehaviorTask {
 		behaviorList = behaviors;
 	}
 
+	public void setBehaviorSelector(params BehaviorTask[] behaviors) {
+		behaviorList = behaviors;
+	}
+
 	//runs each selector children left to right till all fails
 	public override BehaviorReturnResult behave ()	{
 		for (int i = 0; i < behaviorList.Length; i ++) {

@@ -12,7 +12,8 @@ public class TriangleImproved : MonoBehaviour {
     private GameObject triOne, triTwo, triThree;
 	private NavMeshAgent agent;
     private LineRenderer triLineOne, triLineTwo, triLineThree;
-    private float currentHealth, currentHMCoolDown;
+    public float currentHealth, currentHMCoolDown;
+	private float percentage = 0.25f;
     [HideInInspector]
     public float shotTempWidth;
     private bool canHailMary = true, canRotate = false, firingBeam = false, canStartTimer = true;
@@ -94,6 +95,33 @@ public class TriangleImproved : MonoBehaviour {
             agent.SetDestination(level3Waypoints[randomNumber].position);
         }
     }
+
+	//gonna be wrong...
+	public BehaviorReturnResult MoveToDestinationOne(){
+		agent.SetDestination (levelOneWaypoint.position);
+		//Debug.Log ("Agent Velocity: " + agent.velocity + "Destination:" + levelOneWaypoint.position + " CurrentPosition: " + this.transform.position + " Point: " + point.position);
+		//Debug.Log (" HasPath: " + agent.hasPath + " PathStatus: " + agent.pathStatus + " RemainingDist: " + agent.remainingDistance);
+		//Debug.Log ("PathPendingWhile:" + agent.pathPending);
+
+		if (agent.hasPath == true) {
+			if (agent.remainingDistance <= 0.05f) {
+					return BehaviorReturnResult.Success;
+			} else
+					return BehaviorReturnResult.Running;
+		} else
+
+		 return BehaviorReturnResult.Running;
+
+	}
+
+	public BehaviorReturnResult CheckAtDestination(){
+		if (agent.hasPath == true) {
+			return BehaviorReturnResult.Running;
+		} else {
+			return BehaviorReturnResult.Success;
+		}
+	}
+
     public IEnumerator RandomSpin() {
         Vector3 newRotation = gameObject.transform.eulerAngles;
         newRotation.y += Random.Range(0f, 360f);
@@ -139,6 +167,7 @@ public class TriangleImproved : MonoBehaviour {
         StartCoroutine(HelperBeam(triLineOne, triOnePos, hitOne, widthOfShot, speedOfShot));
         StartCoroutine(HelperBeam(triLineTwo, triTwoPos, hitTwo, widthOfShot, speedOfShot));
         StartCoroutine(HelperBeam(triLineThree, triThreePos, hitThree, widthOfShot, speedOfShot));
+	
 
     }
 
@@ -163,6 +192,10 @@ public class TriangleImproved : MonoBehaviour {
             StartCoroutine(HelperBeam(triLineTwo, triTwoPos, hitTwo, beamWidth, beamSpeed));
             StartCoroutine(HelperBeam(triLineThree, triThreePos, hitThree, beamWidth, beamSpeed));
        
+			canRotate = false;
+			canStartTimer = true;
+			currentHMCoolDown = 0;
+
             return BehaviorReturnResult.Success;
         }
         return BehaviorReturnResult.Running;
@@ -239,6 +272,13 @@ public class TriangleImproved : MonoBehaviour {
 		return canHailMary; 
 	}
 
+	public bool HealthLessThanPercentage(){
+		if (currentHealth <= maxHealth * percentage) {
+			return true;
+		} else
+			return false;
+	}
+
     //sets up the linerenders for our fireBeam function
     private IEnumerator HelperBeam(LineRenderer beam, Transform beamStart, RaycastHit hit, float widthOfShot, float speedOfShot) {
 
@@ -251,9 +291,9 @@ public class TriangleImproved : MonoBehaviour {
 
         //dissipate triangles and reset hailMary stuff
         Destroy(triOne); Destroy(triTwo); Destroy(triThree);
-        canRotate = false;
-        canStartTimer = true;
-        currentHMCoolDown = 0;
+        //canRotate = false;
+        //canStartTimer = true;
+        //currentHMCoolDown = 0;
     }
 
     //allows the beam to appear and dissapear with hotween

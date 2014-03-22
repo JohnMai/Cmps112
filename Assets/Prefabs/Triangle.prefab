@@ -505,6 +505,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  currentHealth: 0
+  currentHMCoolDown: 0
   shotTempWidth: 0
 --- !u!120 &12000000
 LineRenderer:
